@@ -8,7 +8,7 @@ export default function Nav() {
   console.log(session)
 
   return (
-    <nav className="flex justify-between items-center py-8">
+    <nav className="flex justify-between items-center py-8 px-10">
       <Link href={"/"}>
         <h1>J Recipes</h1>
       </Link>

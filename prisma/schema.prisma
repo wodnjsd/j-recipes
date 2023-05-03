@@ -30,22 +30,25 @@ model Post {
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  String
-  cuisine   Cuisine @relation(fields: [cuisineId], references: [id])
-  cuisineId Int
+  cuisine   Cuisine[]
   comments  Comment[]
 }
 
 model Ingredient {
     id        Int     @id @default(autoincrement())
-    title     String
-    amount    String
+    title     String  @unique
     posts     Post []
+}
+
+model Amount {
+  id Int  @id @default(autoincrement())
+  title   String
 }
 
 
 model Cuisine {
     id        Int     @id @default(autoincrement())
-    title     String
+    title     String  @unique
     posts     Post[]
 
 }

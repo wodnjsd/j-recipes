@@ -1,9 +1,10 @@
-
+import AddRecipe from "@/pages/addRecipe";
 
 export default function Home() {
   return (
     <main>
-     Hello
+     {/* <AddRecipe data="data" /> */}
     </main>
   )
 }
+

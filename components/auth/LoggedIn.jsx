@@ -6,7 +6,7 @@ import Link from "next/link";
 
 const LoggedIn = ({ image}) => {
   return (
-    <li>
+    <li className="flex gap-3">
       <button
         onClick={() => signOut()}
         className="bg-gray-500 text-white px-6 py-2 rounded-md"
@@ -14,7 +14,7 @@ const LoggedIn = ({ image}) => {
         Sign out
       </button>
       <Link href={'/dashboard'}>
-        <Image width={64} height={64} src={image} alt="" priority className='rounded-full' />
+        <Image width={32} height={32} src={image} alt="" priority className='rounded-full' />
       </Link>
     </li>
   );

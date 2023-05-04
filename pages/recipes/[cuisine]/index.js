@@ -1,39 +1,50 @@
 import React from "react";
 import prisma from "@/prisma/client";
-import axios from 'axios'
+import Link from "next/link";
 
 const recipesPerCuisines = ({ recipes }) => {
   return (
     <div>
-      {recipes.map((recipe) => {
-        return <div>{recipe.title}</div>;
-      })}
+      <ul>
+        {recipes.map((recipe) => {
+          return (
+            <li key={recipe.id}>
+              <Link
+                href={{
+                  pathname: `/recipes/${recipe.cuisine}/${recipe.id}`,
+                  query: { id: recipe.id },
+                }}
+              >
+                {recipe.title}
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
     </div>
   );
 };
 
 export default recipesPerCuisines;
 
-
 export async function getStaticPaths() {
-  const cuisines = await prisma.cuisine.findMany()
-  // const cuisines = await axios.get("/api/cuisines/getAll")
-  const allPaths = cuisines.map(cuisine => {
+  const cuisines = await prisma.cuisine.findMany();
+  const allPaths = cuisines.map((cuisine) => {
     return {
       params: {
-        cuisine: cuisine.title
-      }
-    }
-  })
-  console.log(allPaths)
+        cuisine: cuisine.title,
+      },
+    };
+  });
+  console.log(allPaths);
   return {
     paths: allPaths,
     fallback: false,
-  }
+  };
 }
 
 export async function getStaticProps(context) {
-  const id = context?.params.cuisine
+  const id = context?.params.cuisine;
   const recipes = await prisma.post.findMany({
     where: {
       cuisine: {
@@ -43,12 +54,11 @@ export async function getStaticProps(context) {
       },
     },
   });
-  console.log(id)
-  console.log(recipes)
+  console.log(id);
+  console.log(recipes);
   return {
-    props: {recipes}
-  }
-
+    props: { recipes },
+  };
 }
 
 // export async function getServerSideProps() {

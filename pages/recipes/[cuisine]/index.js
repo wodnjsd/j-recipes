@@ -9,14 +9,16 @@ const recipesPerCuisines = ({ recipes }) => {
         {recipes.map((recipe) => {
           return (
             <li key={recipe.id}>
+              <div className="border rounded p-2">
               <Link
                 href={{
-                  pathname: `/recipes/${recipe.cuisine}/${recipe.id}`,
+                  pathname: `/recipe/${recipe.id}`,
                   query: { id: recipe.id },
                 }}
               >
-                {recipe.title}
+                <h2>{recipe.title}</h2>
               </Link>
+              </div>
             </li>
           );
         })}
@@ -60,20 +62,3 @@ export async function getStaticProps(context) {
     props: { recipes },
   };
 }
-
-// export async function getServerSideProps() {
-//   const recipes = await prisma.post.findMany({
-//     where: {
-//       cuisine: {
-//         some: {
-//           title: "Korean",
-//         },
-//       },
-//     },
-//   });
-//   console.log(recipes);
-
-//   return {
-//     props: { recipes },
-//   };
-// }

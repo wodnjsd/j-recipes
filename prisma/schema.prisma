@@ -26,18 +26,20 @@ model Post {
   id        Int     @id @default(autoincrement())
   createdAt DateTime @default(now())
   title     String
-  ingredients   Ingredient[] 
+  description String?
+  ingredients  String[] 
   published Boolean @default(false)
   author    User    @relation(fields: [authorId], references: [id])
   authorId  String
   cuisine   Cuisine[]
+  instructions  String?
   comments  Comment[]
+
 }
 
 model Ingredient {
     id        Int     @id @default(autoincrement())
     title     String  @unique
-    posts     Post []
 }
 
 model Amount {
@@ -55,7 +57,8 @@ model Cuisine {
 
 model Comment { 
     id      Int   @id @default(autoincrement())
-    Post    Post  @relation(fields: [postId], references: [id])
+    content String
+    post    Post  @relation(fields: [postId], references: [id])
     postId  Int
     author    User    @relation(fields: [authorId], references: [id])
     authorId  String

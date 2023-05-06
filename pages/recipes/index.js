@@ -4,11 +4,13 @@ import Link from "next/link";
 
 const Cuisines = ({ cuisines }) => {
   return (
-    <div>
+    <div className="flex justify-between gap-3 flex-wrap">
       {cuisines.map((cuisine) => {
         return (
           <Link key={cuisine.id} href={`/recipes/${cuisine.title}`} passHref>
-            <h2>{cuisine.title}</h2>
+            <div className="w-40 border rounded-md p-2">
+            <h2>{cuisine.title[0].toUpperCase() + cuisine.title.slice(1)}</h2>
+            </div>
           </Link>
         );
       })}
@@ -20,12 +22,8 @@ export default Cuisines;
 
 export async function getServerSideProps() {
   const cuisines = await prisma.cuisine.findMany();
-  const cuisineList = cuisines.map((label) => ({
-    value: label.title,
-    label: label.title,
-  }));
   console.log(cuisines);
   return {
-    props: { cuisines, cuisineList },
+    props: { cuisines },
   };
 }

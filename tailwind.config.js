@@ -7,6 +7,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        castoro: ['var(--font-castoro)'],
+        jacques: ['var(--font-jacques)'],
+      },
     },
   },
   plugins: [],

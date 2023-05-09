@@ -9,7 +9,7 @@ const LoggedIn = ({ image}) => {
     <li className="flex gap-3">
       <button
         onClick={() => signOut()}
-        className="bg-gray-500 text-white px-6 py-2 rounded-md"
+        className="bg-stone-500 text-white px-6 py-2 rounded-md"
       >
         Sign out
       </button>

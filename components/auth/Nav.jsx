@@ -8,14 +8,18 @@ export default function Nav() {
   console.log(session)
 
   return (
-    <nav className="flex justify-between items-center py-8 px-10">
+    <nav className="hidden sm:flex justify-between items-center py-8 font-castoro">
       <Link href={"/"}>
-        <h1>J Recipes</h1>
+        <h1 className='text-xl'>J Recipes</h1>
       </Link>
-      <ul>
+      <ul className='flex gap-5 '>
+        <li className="font-castoro"><Link href={"/recipes"}>Cuisines</Link></li>
+        <li><Link href={"/add-recipe"}>Add new recipe</Link></li>
+        </ul>
+        <div>
         {!session?.user && <Login />}
         {session?.user && <LoggedIn image={session.user?.image} />}
-      </ul>
+        </div>
     </nav>
   )
   

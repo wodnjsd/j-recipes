@@ -4,64 +4,83 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 
 const Recipe = ({ recipe }) => {
-  const [comment, setComment] = useState("")
-  const router= useRouter()
+  const [comment, setComment] = useState("");
+  const router = useRouter();
 
-  const handleDelete = async(id) => {
+  const handleDelete = async (id) => {
     try {
-      console.log(id)
-      await axios.delete(`/api/recipes/${id}`)
-      router.push('/recipes')
-    } 
-    catch(e) {
-      console.log(e)
+      console.log(id);
+      await axios.delete(`/api/recipes/${id}`);
+      router.push("/recipes");
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
 
-  const handleComment = async() => {
+  const handleComment = async () => {
     try {
-      const {data} = await axios.post(`/api/comments/${recipe.id}`, {comment})
-      console.log(data)
-      router.replace(router.asPath)
-      setComment("")
-    } catch(e) {
-      console.log(e)
+      const { data } = await axios.post(`/api/comments/${recipe.id}`, {
+        comment,
+      });
+      console.log(data);
+      setComment("");
+      router.replace(router.asPath);
+    } catch (e) {
+      console.log(e);
     }
-  }
+  };
 
+  // const deleteComment = async() => {
+  //   try {
+  //     await axios.delete(`/api/comments/${recipe.id}`)
+  //   } catch(e) {
+  //     console.log(e)
+  //   }
+  // }
 
   return (
-    <>
-      <div className="border rounded p-2">
-        <h1>{recipe.title}</h1>
-        <p className="text-sm">Added by: {recipe.authorId}</p>
-        <div>
-          <h3>Ingredients:</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Ingredient</th>
-                <th>Amount</th>
-              </tr>
-            </thead>
-            <tbody>
-            {recipe.ingredients.map((ingredient) => {
-              return <tr><td>{ingredient}</td></tr>;
-            })}
-            </tbody>
-          </table>
+    <div className="flex flex-col my-20 gap-10">
+      <div>
+        <div className="h-80 flex flex-col gap-3 items-center border rounded p-2 bg-stone-100">
+          <h1>{recipe.title}</h1>
+          <div>
+            <h3>Ingredients:</h3>
+            <ul>
+              {recipe.ingredients.map((ingredient) => {
+                return <li key={ingredient.id}>{ingredient}</li>;
+              })}
+            </ul>
+          </div>
+          <div>
+            <h3>Instructions:</h3>
+            <p>{recipe.instructions}</p>
+          </div>
         </div>
+        <p className="text-sm">Added by: {recipe.authorId}</p>
+        <button
+          type="button"
+          onClick={() => handleDelete(recipe.id)}
+          className="border rounded-md px-2"
+        >
+          Delete
+        </button>
       </div>
-      <button type="button" onClick={() =>handleDelete(recipe.id)} className="border rounded-md px-2">Delete</button>
-      <div>Comments:</div>
-      {recipe.comments.map((comment) => (
-        <div>{comment.content}
-          <button>delete comment</button></div>
-      ))}
-      <textarea placeholder="Comments" 
-      onChange={(e) => setComment(e.target.value)}/>
-      <button onClick={handleComment}>Submit</button>
-    </>
+      <div className="flex flex-col">
+        Add a comment:
+        <textarea
+          placeholder="Comments"
+          onChange={(e) => setComment(e.target.value)}
+          className="rounded-md"
+        />
+        <button onClick={handleComment}>Submit</button>
+        {recipe.comments.map((comment) => (
+          <div key={comment.id} className="border rounded-md">
+            {comment.content}
+            {/* <button onClick={deleteComment(comment.id)}>delete comment</button> */}
+          </div>
+        ))}
+      </div>
+    </div>
   );
 };
 
@@ -73,7 +92,7 @@ export async function getServerSideProps(context) {
     where: { id: id },
     include: {
       cuisine: true,
-      comments: true
+      comments: true,
     },
   });
   console.log(recipe);

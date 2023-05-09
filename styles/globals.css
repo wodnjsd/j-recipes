@@ -1,4 +1,19 @@
 @tailwind base;
+
+@layer base {
+
+  button {
+    @apply  rounded-lg py-2 hover:shadow-lg
+  }
+  input {
+    @apply bg-stone-200 border border-gray-300 p-2 rounded-md focus:border-gray-400 focus:outline-none
+  }
+  textarea {
+    @apply border border-gray-300 p-1 rounded-lg focus:border-gray-400 focus:outline-none
+  }
+}
+
+
 @tailwind components;
 @tailwind utilities;
 

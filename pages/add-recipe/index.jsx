@@ -2,13 +2,20 @@
 
 import { useState } from "react";
 import axios from "axios";
-import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import prisma from "@/prisma/client";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
 
 const AddRecipe = (props) => {
+
+  const router = useRouter()
+
   const [formData, setFormData] = useState({
     title: "",
-    ingredients: [],
+    description: "",
+    // ingredients: [],
     cuisine: [],
     instructions: "",
   });
@@ -16,9 +23,18 @@ const AddRecipe = (props) => {
   const [ingredients, setIngredients] = useState([{ name: "", amount: "" }]);
 
   const handleIngredients = (i, e) => {
+    console.log("index", i, "e", e.target);
     let newIngredients = [...ingredients];
     newIngredients[i][e.target.name] = e.target.value;
     setIngredients(newIngredients);
+  };
+
+  const handleIngredientName = (i, value, action) => {
+    console.log(i, value, action);
+    let newIngredients = [...ingredients];
+    newIngredients[i][action.name] = value;
+    setIngredients(newIngredients);
+    console.log(newIngredients);
   };
 
   const addIngredients = () => {
@@ -38,49 +54,57 @@ const AddRecipe = (props) => {
     const newFormData = {
       ...formData,
       cuisine: formData.cuisine.map((type) => type.value),
-      // ingredients: formData.ingredients.map((type) => type.value),
-      ingredients: ingredients.map((ing) => ing.name + " - " + ing.amount),
+      ingredients: ingredients.map((ing) => ing.name.label + "  " + ing.amount),
     };
     try {
       const { data } = await axios.post("/api/recipes/addRecipe", newFormData);
       console.log(data);
+      toast.success("Recipe created!");
+      await router.push(`/recipe/${data.id}`)
     } catch (error) {
+      // toast.error(error.response.data.message);
       console.log(error);
     }
   };
 
   return (
-    <>
+    <div className="flex flex-col items-center">
       <div>
-        <h1>Add your delicious recipe here!</h1>
+        <h1 className="text-xl">Add your delicious recipe here!</h1>
       </div>
       <form
         onSubmit={handleSubmit}
-        className="bg-white my-5 mx-10 px-10 py-4 rounded-md"
+        className="bg-stone-200 my-5 mx-10 px-10 py-10 rounded-md"
       >
         <div className="flex flex-col justify-between gap-5">
-          <label>Recipe Name</label>
+          {/* <label>Recipe Name</label> */}
           <input
             onChange={handleChange}
             name="title"
             value={formData.title}
-            placeholder="New Recipe"
-            className="p4 text-lg rounded-lg"
+            placeholder="New recipe name"
+  
           />
-          <label>Cuisine</label>
-          <Select
+          {/* <label>Description</label> */}
+          <input onChange={handleChange}
+            name="description"
+            value={formData.description}
+            placeholder="Description"
+            />
+          {/* <label>Cuisine</label> */}
+          <CreatableSelect
             defaultValue={[]}
+            placeholder="Select cuisine"
             isMulti
             options={props.cuisineList}
             onChange={(cuisine) => setFormData({ ...formData, cuisine })}
             value={formData.cuisine}
           />
-          <label>Ingredients</label>
+          {/* <label>Ingredients</label> */}
           {ingredients.map((element, index) => (
-            <div key={index} className="flex">
-              <div>
+            <div key={index} className="flex flex-col sm:flex-row">
                 {/* <label>Name</label> */}
-                <select
+                {/* <select
                   name="name"
                   onChange={(e) => handleIngredients(index, e)}
                 >
@@ -88,17 +112,17 @@ const AddRecipe = (props) => {
                   {props.ingredientList.map((ing) => (
                     <option value={ing.value}>{ing.label}</option>
                   ))}
-                </select>
-                {/* <Select
-                form
+                </select> */}
+                <CreatableSelect
                   options={props.ingredientList}
                   name="name"
-                  onChange={(e) => handleIngredients(index, e)}
+                  onChange={(value, action) =>
+                    handleIngredientName(index, value, action)
+                  }
                   value={element.name}
-                /> */}
-              </div>
+                />
+            
               <div>
-                {/* <label>Amount</label> */}
                 <input
                   type="text"
                   name="amount"
@@ -106,17 +130,6 @@ const AddRecipe = (props) => {
                   placeholder="amount"
                   onChange={(e) => handleIngredients(index, e)}
                 />
-                {/* <Select
-                  options={props.amountsList}
-                  name="amount"
-                  // onChange={(e) => handleIngredients(index, e)}
-                  onChange={(amount) =>
-                    setIngredients(
-                      [...ingredients, ingredients[index].amount = amount]
-                    )
-                  }
-                  value={element.amount}
-                /> */}
               </div>
             </div>
           ))}
@@ -125,23 +138,15 @@ const AddRecipe = (props) => {
             onClick={addIngredients}
             className="border rounded-md"
           >
+            {" "}
             +
           </button>
-          {/* <Select
-            defaultValue={[]}
-            isMulti
-            options={props.ingredientList}
-            onChange={(ingredients) =>
-              setFormData({ ...formData, ingredients })
-            }
-            value={formData.ingredients}
-          /> */}
-          <label>Instructions</label>
+          {/* <label>Instructions</label> */}
           <textarea
             onChange={handleChange}
             name="instructions"
             value={formData.instructions}
-            placeholder="Write some instructions"
+            placeholder="Instructions"
             className="p-4 border rounded-lg"
           ></textarea>
           <button
@@ -152,7 +157,7 @@ const AddRecipe = (props) => {
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

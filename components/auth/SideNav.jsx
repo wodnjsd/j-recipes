@@ -15,23 +15,24 @@ export default function Nav() {
   };
 
   return (
-    <div className="sm:hidden fixed ">
+    <div className="sm:hidden h-full w-full fixed z-20 left-0 top-0">
       <button onClick={toggle}>
         {isOpen ? <IoClose /> : <AiOutlineMenu />}
       </button>
       {isOpen && (
         <motion.nav
           initial={{ width: 0 }}
-          animate={{ width: 400 }}
+          animate={{ width: "100%" }}
+          className=" bg-stone-100 flex flex-col h-full justify-center gap-20 items-center"
         >
-          <ul className="flex flex-col gap-5 items-center">
-            <li>
+          <ul className="flex flex-col  gap-5 ">
+            <li onClick={toggle}>
               <Link href={"/recipes"}>Home</Link>
             </li>
-            <li>
+            <li onClick={toggle}>
               <Link href={"/recipes"}>Cuisines</Link>
             </li>
-            <li>
+            <li onClick={toggle}>
               <Link href={"/add-recipe"}>Add new recipe</Link>
             </li>
           </ul>

@@ -5,10 +5,10 @@ import { Toaster } from "react-hot-toast"
 export default function Layout({children}) {
   return (
     <>
-    <SideNav />
+
     <Nav />
     <Toaster />
-    <main>{children}</main>
+    <main>   {children}</main>
     </>
   )
 }

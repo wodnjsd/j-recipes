@@ -2,6 +2,7 @@ import "@/styles/globals.css";
 import Layout from "@/components/layout";
 import { SessionProvider } from "next-auth/react";
 import { Jacques_Francois, Castoro_Titling } from "next/font/google";
+import SideNav from '../components/auth/SideNav'
 
 const jacques = Jacques_Francois({
   weight: "400",
@@ -24,6 +25,7 @@ export default function App({
 
         <main className={`${jacques.variable} ${castoro.variable}`}>
         <Layout>
+        {/* <SideNav /> */}
           <Component {...pageProps} />
           </Layout>
         </main>

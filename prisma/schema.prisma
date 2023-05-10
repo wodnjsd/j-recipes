@@ -58,7 +58,7 @@ model Cuisine {
 model Comment { 
     id      Int   @id @default(autoincrement())
     content String
-    post    Post  @relation(fields: [postId], references: [id])
+    post    Post  @relation(fields: [postId], references: [id], onDelete: Cascade)
     postId  Int
     author    User    @relation(fields: [authorId], references: [id])
     authorId  String

@@ -4,7 +4,6 @@ import { useState } from "react";
 import axios from "axios";
 import CreatableSelect from "react-select/creatable";
 import prisma from "@/prisma/client";
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 
@@ -49,8 +48,10 @@ const AddRecipe = (props) => {
   };
 
   const handleSubmit = async (e) => {
+    let toastPostID = ""
     console.log(ingredients);
     e.preventDefault();
+     toastPostID = toast.loading("Creating your post", {id: toastPostID})
     const newFormData = {
       ...formData,
       cuisine: formData.cuisine.map((type) => type.value),
@@ -59,13 +60,14 @@ const AddRecipe = (props) => {
     try {
       const { data } = await axios.post("/api/recipes/addRecipe", newFormData);
       console.log(data);
-      toast.success("Recipe created!");
+      toast.success("Recipe created!", {id: toastPostID});
       await router.push(`/recipe/${data.id}`)
     } catch (error) {
-      // toast.error(error.response.data.message);
+      toast.error(error.response.data.message, {id: toastPostID});
       console.log(error);
     }
   };
+
 
   return (
     <div className="flex flex-col items-center">

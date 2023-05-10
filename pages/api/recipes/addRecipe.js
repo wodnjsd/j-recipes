@@ -9,22 +9,32 @@ export default async function handle(req, res) {
   if (!session) {
     return res.status(401).json({ message: "Please sign in to create a post" });
   }
-  const result = await prisma.post.create({
-    data: {
-      title: title,
-      description: description,
-      ingredients: ingredients,
-      cuisine: {
-        connectOrCreate: cuisine.map((cuisine) => {
-          return {
-            where: { title: cuisine },
-            create: { title: cuisine },
-          };
-        }),
+  if (!title.length) {
+    return res
+      .status(403)
+      .json({ message: "Please fill in the required fields" });
+  }
+  try {
+    const result = await prisma.post.create({
+      data: {
+        title: title,
+        description: description,
+        ingredients: ingredients,
+        cuisine: {
+          connectOrCreate: cuisine.map((cuisine) => {
+            return {
+              where: { title: cuisine },
+              create: { title: cuisine },
+            };
+          }),
+        },
+        instructions: instructions,
+        author: { connect: { email: session?.user?.email } },
       },
-      instructions: instructions,
-      author: { connect: { email: session?.user?.email } },
-    },
-  });
-  res.json(result);
+    });
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(403).json({ message: "Error whilst creating post" });
+    console.log(error);
+  }
 }
